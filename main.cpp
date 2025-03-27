@@ -428,18 +428,18 @@ int main() {
 
 	// build and compile shaders
 	// -------------------------
-	Shader myShader("shaders/shader_texture_color.vs", "shaders/shader_texture_color.fs"); //To use with primitives
-	Shader staticShader("Shaders/shader_Lights.vs", "Shaders/shader_Lights_mod.fs");	//To use with static models
-	Shader skyboxShader("Shaders/skybox.vs", "Shaders/skybox.fs");	//To use with skybox
-	Shader animShader("Shaders/anim.vs", "Shaders/anim.fs");	//To use with animated models 
+	Shader myShader("Assets/Shaders/shader_texture_color.vs", "Assets/Shaders/shader_texture_color.fs"); //To use with primitives
+	Shader staticShader("Assets/Shaders/shader_Lights.vs", "Assets/Shaders/shader_Lights_mod.fs");	//To use with static models
+	Shader skyboxShader("Assets/Shaders/skybox.vs", "Assets/Shaders/skybox.fs");	//To use with skybox
+	Shader animShader("Assets/Shaders/anim.vs", "Assets/Shaders/anim.fs");	//To use with animated models 
 	
 	vector<std::string> faces{
-		"resources/skybox/right.jpg",
-		"resources/skybox/left.jpg",
-		"resources/skybox/top.jpg",
-		"resources/skybox/bottom.jpg",
-		"resources/skybox/front.jpg",
-		"resources/skybox/back.jpg"
+		"Assets/skybox/right.jpg",
+		"Assets/skybox/left.jpg",
+		"Assets/skybox/top.jpg",
+		"Assets/skybox/bottom.jpg",
+		"Assets/skybox/front.jpg",
+		"Assets/skybox/back.jpg"
 	};
 
 	Skybox skybox = Skybox(faces);
@@ -451,15 +451,15 @@ int main() {
 
 	// load models
 	// -----------
-	Model piso("resources/objects/piso/piso.obj");
-	//Model carro("resources/objects/lambo/carroceria.obj");
-	//Model llanta("resources/objects/lambo/Wheel.obj");
-	//Model casaVieja("resources/objects/casa/OldHouse.obj");
-	//Model cubo("resources/objects/cubo/cube02.obj");
-	//Model casaDoll("resources/objects/casa/DollHouse.obj");
+	Model piso("Assets/objects/piso/piso.obj");
+	//Model carro("Assets/objects/lambo/carroceria.obj");
+	//Model llanta("Assets/objects/lambo/Wheel.obj");
+	//Model casaVieja("Assets/objects/casa/OldHouse.obj");
+	//Model cubo("Assets/objects/cubo/cube02.obj");
+	//Model casaDoll("Assets/objects/casa/DollHouse.obj");
 
 	// Modelos Animados
-	//ModelAnim animacionPersonaje("resources/objects/Personaje1/Arm.dae");
+	//ModelAnim animacionPersonaje("Assets/objects/Personaje1/Arm.dae");
 	//animacionPersonaje.initShaders(animShader.ID);
 
 
