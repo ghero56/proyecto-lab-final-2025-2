@@ -13,6 +13,39 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de origen\ImGui">
+      <UniqueIdentifier>{62f928a7-b268-499c-b051-64a695106593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ImGui">
+      <UniqueIdentifier>{57d730c2-3cfb-4dff-96cf-7b67b9898253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\GLFW">
+      <UniqueIdentifier>{a739e26b-da3c-4921-9697-c8576125a4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Shaders">
+      <UniqueIdentifier>{9d18820f-4a05-46d6-9e92-cdc24fb2045f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders">
+      <UniqueIdentifier>{3e173ad7-fc98-4c4d-806e-1ff517550cfe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders\Animation">
+      <UniqueIdentifier>{cad20da4-07fb-4c89-96a3-2af71e1b7506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders\Lights">
+      <UniqueIdentifier>{1b7cf7d1-be66-402f-a340-e17ad35235d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders\Projection">
+      <UniqueIdentifier>{bc7349b0-6c8a-48ce-b8dc-fdd3502ed9cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders\Skybox">
+      <UniqueIdentifier>{d9c2107c-a8ca-4ff8-a108-574e23ef832a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Shaders\Texture">
+      <UniqueIdentifier>{28beb662-55b4-4f3d-9aaf-01871f735836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Engine">
+      <UniqueIdentifier>{b98ec7ff-9cc7-40c7-9444-55db6cd32335}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -21,59 +54,68 @@
     <ClCompile Include="main.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="include\imgui\imgui.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_demo.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_draw.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_tables.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_widgets.cpp">
+      <Filter>Archivos de origen\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\anim.fs">
-      <Filter>Archivos de recursos</Filter>
-    </None>
     <None Include="shaders\anim.vs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Animation</Filter>
+    </None>
+    <None Include="shaders\anim.fs">
+      <Filter>Archivos de recursos\Shaders\Animation</Filter>
     </None>
     <None Include="shaders\shader_Lights.fs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Lights</Filter>
     </None>
     <None Include="shaders\shader_Lights.vs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Lights</Filter>
     </None>
     <None Include="shaders\shader_Lights_mod.fs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Lights</Filter>
     </None>
     <None Include="shaders\shader_projection.fs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Projection</Filter>
     </None>
     <None Include="shaders\shader_projection.vs">
-      <Filter>Archivos de recursos</Filter>
-    </None>
-    <None Include="shaders\shader_texture_color.fs">
-      <Filter>Archivos de recursos</Filter>
-    </None>
-    <None Include="shaders\shader_texture_color.vs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Projection</Filter>
     </None>
     <None Include="shaders\skybox.fs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Skybox</Filter>
     </None>
     <None Include="shaders\skybox.vs">
-      <Filter>Archivos de recursos</Filter>
+      <Filter>Archivos de recursos\Shaders\Skybox</Filter>
+    </None>
+    <None Include="shaders\shader_texture_color.fs">
+      <Filter>Archivos de recursos\Shaders\Texture</Filter>
+    </None>
+    <None Include="shaders\shader_texture_color.vs">
+      <Filter>Archivos de recursos\Shaders\Texture</Filter>
+    </None>
+    <None Include="Assets\imgui.ini">
+      <Filter>Archivos de recursos\Engine</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\eglew.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\glew.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\glfw3.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\glfw3native.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\glxew.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\mesh.h">
@@ -88,23 +130,62 @@
     <ClInclude Include="include\modelAnim.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\shader.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\shader_m.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="include\shader_s.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="include\Skybox.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="include\stb_image.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="include\wglew.h">
-      <Filter>Archivos de encabezado</Filter>
+    <ClInclude Include="include\imgui\imstb_truetype.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imconfig.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\backends\imgui_impl_glfw.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_rectpack.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_textedit.h">
+      <Filter>Archivos de encabezado\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\eglew.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glew.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glfw3.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glfw3native.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glxew.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\wglew.h">
+      <Filter>Archivos de encabezado\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shader_s.h">
+      <Filter>Archivos de encabezado\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shader.h">
+      <Filter>Archivos de encabezado\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shader_m.h">
+      <Filter>Archivos de encabezado\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
