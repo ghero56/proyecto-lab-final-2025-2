@@ -20,9 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\imgui.ini" />
     <None Include="shaders\anim.fs" />
     <None Include="shaders\anim.vs" />
     <None Include="shaders\shader_Lights.fs" />
@@ -37,11 +45,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h" />
-    <ClInclude Include="include\eglew.h" />
-    <ClInclude Include="include\glew.h" />
-    <ClInclude Include="include\glfw3.h" />
-    <ClInclude Include="include\glfw3native.h" />
-    <ClInclude Include="include\glxew.h" />
+    <ClInclude Include="include\GLFW\eglew.h" />
+    <ClInclude Include="include\GLFW\glew.h" />
+    <ClInclude Include="include\GLFW\glfw3.h" />
+    <ClInclude Include="include\GLFW\glfw3native.h" />
+    <ClInclude Include="include\GLFW\glxew.h" />
+    <ClInclude Include="include\GLFW\wglew.h" />
+    <ClInclude Include="include\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="include\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\meshAnim.h" />
     <ClInclude Include="include\model.h" />
@@ -51,7 +68,6 @@
     <ClInclude Include="include\shader_s.h" />
     <ClInclude Include="include\Skybox.h" />
     <ClInclude Include="include\stb_image.h" />
-    <ClInclude Include="include\wglew.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -140,13 +156,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;include\imgui;include\imgui\backends;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mt.lib;SDL3.lib;opengl32.lib;glew32.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>;assimp-vc143-mt.lib;SDL3.lib;opengl32.lib;glew32.lib;glfw3.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

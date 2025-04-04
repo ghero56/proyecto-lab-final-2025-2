@@ -8,8 +8,15 @@
 
 #include <Windows.h>
 
+
+// dearImGUI
+#include "imgui.h"
 #include <glad/glad.h>
-#include <glfw3.h>						//main
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+#include "GLFW/glfw3.h"						//main
+
 #include <stdlib.h>		
 #include <glm/glm.hpp>					//camera y model
 #include <glm/gtc/matrix_transform.hpp>	//camera y model
@@ -48,7 +55,7 @@ float MovementSpeed = 0.1f;
 GLfloat lastX = SCR_WIDTH / 2.0f,
 		lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
-bool movementMode = true;
+bool movementMode = false;
 bool showMouse = false;
 
 //Timing
@@ -388,6 +395,11 @@ int main() {
 	// glfw: initialize and configure
 	glfwInit();
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 	// glfw window creation
 	monitors = glfwGetPrimaryMonitor();
 	getResolution();
@@ -423,8 +435,19 @@ int main() {
 	LoadTextures();
 	myData();
 	glEnable(GL_DEPTH_TEST);
-
 	
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.IniFilename = "Assets/imgui.ini"; // para guardar el .ini en otro lado
+
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
 
 	// build and compile shaders
 	// -------------------------
@@ -479,13 +502,17 @@ int main() {
 	glm::mat4 viewOp = glm::mat4(1.0f);		//Use this matrix for ALL models
 	glm::mat4 projectionOp = glm::mat4(1.0f);	//This matrix is for Projection
 
-	// secuestramos el mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwPollEvents();
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::ShowDemoWindow();
+
 		skyboxShader.setInt("skybox", 0);
 
 		// per-frame time logic
@@ -501,6 +528,9 @@ int main() {
 		// ------
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		// don't forget to enable shader before setting uniforms
 		//Setup shader for static models
@@ -640,10 +670,10 @@ int main() {
 		staticShader.setMat4("model", modelOp);
 		casaDoll.Draw(staticShader);*/
 
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.75f, 0.0f));
+		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.75f, 0.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(0.2f));
 		staticShader.setMat4("model", modelOp);
-		piso.Draw(staticShader);
+		piso.Draw(staticShader);*/
 
 		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -70.0f));
 		modelOp = glm::scale(modelOp, glm::vec3(5.0f));
@@ -771,14 +801,21 @@ int main() {
 		
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
 	glDeleteVertexArrays(2, VAO);
 	glDeleteBuffers(2, VBO);
 	//skybox.Terminate();
+	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	glfwTerminate();
 	return 0;
 }
@@ -787,17 +824,19 @@ int main() {
 // ---------------------------------------------------------------------------------------------------------
 void my_input(GLFWwindow* window, int key, int scancode, int action, int mode) 
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		if (showMouse)
-			glfwSetWindowShouldClose(window, true);
-		showMouse = !showMouse;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-
-	/*if (glfwGetKey(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE)
-		movementMode = false;*/
+	
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		movementMode = true;
+	}
+	
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		movementMode = false;
+	}
 
 	if (movementMode) {
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -896,7 +935,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	lastX = xpos;
 	lastY = ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	if(movementMode)
+		camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
