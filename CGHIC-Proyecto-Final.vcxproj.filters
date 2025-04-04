@@ -140,6 +140,9 @@
     <None Include="shaders\anim.vs">
       <Filter>Assets\Shaders</Filter>
     </None>
+    <None Include="Assets\scene.yaml">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

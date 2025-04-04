@@ -220,8 +220,6 @@ void LoadTextures()
 	t_white = generateTextures("Assets/Texturas/white.jpg", 0, false);
 }
 
-
-
 void animate(void) 
 {
 	if (play)
@@ -451,13 +449,15 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
+	// LoadScene(lastScene);
+
 	// build and compile shaders
 	// -------------------------
 	Shader myShader("Assets/Shaders/shader_texture_color.vs", "Assets/Shaders/shader_texture_color.fs"); //To use with primitives
 	Shader staticShader("Assets/Shaders/shader_Lights.vs", "Assets/Shaders/shader_Lights_mod.fs");	//To use with static models
 	Shader skyboxShader("Assets/Shaders/skybox.vs", "Assets/Shaders/skybox.fs");	//To use with skybox
 	Shader animShader("Assets/Shaders/anim.vs", "Assets/Shaders/anim.fs");	//To use with animated models 
-	
+
 	vector<std::string> faces{
 		"Assets/skybox/right.jpg",
 		"Assets/skybox/left.jpg",

@@ -1,0 +1,29 @@
+Scene:
+  Skybox:
+    files:
+      - "Assets/skybox/right.jpg"
+      - "Assets/skybox/left.jpg"
+      - "Assets/skybox/top.jpg"
+      - "Assets/skybox/bottom.jpg"
+      - "Assets/skybox/front.jpg"
+      - "Assets/skybox/back.jpg"
+  GameObjects:
+    - name: "Tree"
+      transform:
+        position: [-2.0, 0.0, -5.0]
+        rotation: [0.0, 45.0, 0.0]
+        scale: [1.5, 1.5, 1.5]
+      model:
+        obj_files:
+          - "models/tree.obj"
+      shader: "static"
+
+    - name: "Rock"
+      transform:
+        position: [3.0, 0.0, -2.0]
+        rotation: [0.0, 0.0, 0.0]
+        scale: [0.8, 0.8, 0.8]
+      model:
+        obj_files:
+          - "models/rock.obj"
+      shader: "animation"
