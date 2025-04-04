@@ -2,12 +2,14 @@
 /*-------- Código fuente de Luis Sergio Valencia ----------*/
 /*---------------------------------------------------------*/
 /*-------- Edición inicial de Fernando Arciga G. ----------*/
+/*-------- Edición de........................... ----------*/
+/*-------- Edición de........................... ----------*/
+/*-------- Edición de........................... ----------*/
 /*--------- Proyecto Final Computación Gráfica ------------*/
 /*---------- e Interacción Humano Computadora -------------*/
 /*---------------------------------------------------------*/
 
 #include <Windows.h>
-
 
 // dearImGUI
 #include "imgui.h"
