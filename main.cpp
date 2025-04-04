@@ -2,7 +2,7 @@
 /*-------- Código fuente de Luis Sergio Valencia ----------*/
 /*---------------------------------------------------------*/
 /*-------- Edición inicial de Fernando Arciga G. ----------*/
-/*-------- Edición de........................... ----------*/
+/*-------- Edición de Oscar Manuel Suaznavar Arvizu -------*/
 /*-------- Edición de........................... ----------*/
 /*-------- Edición de........................... ----------*/
 /*--------- Proyecto Final Computación Gráfica ------------*/
@@ -42,6 +42,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void my_input(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouseInput_Callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void animate(void);
 
 // settings
@@ -418,6 +419,7 @@ int main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetKeyCallback(window, my_input);
+	glfwSetMouseButtonCallback(window,(GLFWmousebuttonfun) mouseInput_Callback);
 
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -841,17 +843,17 @@ void my_input(GLFWwindow* window, int key, int scancode, int action, int mode)
 	}
 
 	if (movementMode) {
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_W))
 			camera.ProcessKeyboard(FORWARD, (float)deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_S))
 			camera.ProcessKeyboard(BACKWARD, (float)deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_A))
 			camera.ProcessKeyboard(LEFT, (float)deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_D))
 			camera.ProcessKeyboard(RIGHT, (float)deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_E))
 			camera.ProcessKeyboard(UP, (float)deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_Q))
 			camera.ProcessKeyboard(DOWN, (float)deltaTime);
 	}
 	
@@ -913,6 +915,21 @@ void my_input(GLFWwindow* window, int key, int scancode, int action, int mode)
 	}
 
 }
+
+void mouseInput_Callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		movementMode = true;
+	}
+
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		movementMode = false;
+	}
+}
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
