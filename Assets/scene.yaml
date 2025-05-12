@@ -8,22 +8,22 @@ Scene:
       - "Assets/skybox/front.jpg"
       - "Assets/skybox/back.jpg"
   GameObjects:
-    - name: "Tree"
+    - name: "Edificio"
       transform:
-        position: [-2.0, 0.0, -5.0]
+        position: [-20.0, 0.0, -50.0]
         rotation: [0.0, 45.0, 0.0]
         scale: [1.5, 1.5, 1.5]
       model:
         obj_files:
-          - "models/tree.obj"
+          - "Assets/objects/Edificio Q.obj"
       shader: "static"
 
     - name: "Rock"
       transform:
-        position: [3.0, 0.0, -2.0]
+        position: [30.0, 0.0, 70.0]
         rotation: [0.0, 0.0, 0.0]
         scale: [0.8, 0.8, 0.8]
       model:
         obj_files:
-          - "models/rock.obj"
-      shader: "animation"
+          - "Assets/objects/Edificio Q.obj"
+      shader: "static"

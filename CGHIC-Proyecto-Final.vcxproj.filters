@@ -102,6 +102,9 @@
     <ClInclude Include="include\GLFW\eglew.h">
       <Filter>Headers\GLFW</Filter>
     </ClInclude>
+    <ClInclude Include="include\fmod\core\inc\fmod.hpp">
+      <Filter>Headers\Fmod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\imgui.ini">
@@ -143,6 +146,9 @@
     <None Include="Assets\scene.yaml">
       <Filter>Assets</Filter>
     </None>
+    <None Include="Assets\editor.cfg">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -165,6 +171,9 @@
     </Filter>
     <Filter Include="Source\ImGui">
       <UniqueIdentifier>{9b1cd2c4-7e8d-425d-938e-6939fbf95f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers\Fmod">
+      <UniqueIdentifier>{a8e348c8-099b-428e-aded-5f1a01c6d58d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
