@@ -434,7 +434,8 @@ struct GameObjectData {
 	glm::vec3 position, rotation, scale;
 	std::vector<std::string> objFiles;
 	Shader* shader;
-	Model* model;
+	Model* model = nullptr;
+	ModelAnim* model_a = nullptr;
 };
 
 std::vector<GameObjectData> gameObjects;
@@ -466,6 +467,15 @@ void LoadScene(
 		obj.rotation = glm::vec3(rot[0].as<float>(), rot[1].as<float>(), rot[2].as<float>());
 		obj.scale = glm::vec3(scl[0].as<float>(), scl[1].as<float>(), scl[2].as<float>());
 
+		std::string shaderName = node["shader"].as<std::string>();
+		int shaderIndex = GetShaderIndexFromString(shaderName);
+		if (shaderIndex >= 0 && shaderIndex < shaders.size()) {
+			obj.shader = shaders[shaderIndex]; // ya es puntero
+		}
+		else {
+			obj.shader = shaders[0]; // fallback
+		}
+
 		for (const auto& file : node["model"]["obj_files"]) {
 			std::cout << file.as<std::string>() << std::endl;
 			obj.objFiles.push_back(file.as<std::string>());
@@ -474,29 +484,24 @@ void LoadScene(
 		if (obj.objFiles.empty()) {
 			std::cerr << "No OBJ files found for object: " << obj.name << std::endl;
 			continue; // Skip this object if no files are found
-		}else
-			obj.model = new Model(obj.objFiles[0]); // Cargar el primer modelo, se puede modificar para cargar varios si es necesario
-
-		std::string shaderName = node["shader"].as<std::string>();
-		int shaderIndex = GetShaderIndexFromString(shaderName);
-		if (shaderIndex >= 0 && shaderIndex < shaders.size()) {
-			obj.shader = shaders[shaderIndex]; // ya es puntero
-			std::cout << "Shader: " << shaderName << std::endl;
 		}
 		else {
-			obj.shader = shaders[0]; // fallback
+            if (obj.shader == shaders[estatico]) {  
+				obj.model = new Model(obj.objFiles[0]);
+            } else if (obj.shader == shaders[animado]) {  
+				obj.model_a = new ModelAnim(obj.objFiles[0]);
+				obj.model_a->initShaders(obj.shader->ID);
+            } else {  
+				continue;
+            }
 		}
+			
+
+		// ModelAnim animacionPersonaje("Assets/objects/Personaje1/Arm.dae");
+		// animacionPersonaje.initShaders(shaders[2].ID);
 
 		gameObjects.push_back(obj);
 	}
-}
-
-void loadScene(Scene to_load) {
-	// dear imgui text in the middle of the screen
-	ImGui::SetNextWindowPos(ImVec2(SCR_WIDTH / 2 - 200, SCR_HEIGHT / 2 - 100), ImGuiCond_Always);
-	ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Always);
-	ImGui::Begin("Loading Scene", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
-	ImGui::End();
 }
 
 void deserialize(string filename) {
@@ -666,17 +671,17 @@ int main() {
 
 	// load models
 	// -----------
-	Model piso("Assets/objects/piso/piso.obj");
-	Model edificio("Assets/objects/edificio Q.obj");
-	//Model carro("Assets/objects/lambo/carroceria.obj");
-	//Model llanta("Assets/objects/lambo/Wheel.obj");
-	//Model casaVieja("Assets/objects/casa/OldHouse.obj");
-	//Model cubo("Assets/objects/cubo/cube02.obj");
-	//Model casaDoll("Assets/objects/casa/DollHouse.obj");
+	// Model piso("Assets/objects/piso/piso.obj");
+	// Model edificio("Assets/objects/edificio Q.obj");
+	// Model carro("Assets/objects/lambo/carroceria.obj");
+	// Model llanta("Assets/objects/lambo/Wheel.obj");
+	// Model casaVieja("Assets/objects/casa/OldHouse.obj");
+	// Model cubo("Assets/objects/cubo/cube02.obj");
+	// Model casaDoll("Assets/objects/casa/DollHouse.obj");
 
 	// Modelos Animados
-	//ModelAnim animacionPersonaje("Assets/objects/Personaje1/Arm.dae");
-	//animacionPersonaje.initShaders(shaders[2].ID);
+	// ModelAnim animacionPersonaje("Assets/objects/Personaje1/Arm.dae");
+	// animacionPersonaje.initShaders(shaders[2].ID);
 
 	//Inicializaci�n de KeyFrames
 	for (int i = 0; i < MAX_FRAMES; i++)
@@ -703,6 +708,16 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		// ImGui::ShowDemoWindow();
+		// brief tutorial window
+		ImGui::Begin("Instrucciones de uso");
+		// size and position
+		ImGui::SetWindowSize(ImVec2(400, 200), ImGuiCond_Always);
+		// font size
+		ImGui::Text("Presiona 'Esc' para salir");
+		ImGui::Text("Muevete con 'click derecho + WASD' en el modo editor");
+		ImGui::Text("Muevete con 'WASD' en el modo juego");
+		ImGui::Text("Presiona 'ctrl + S' para guardar la escena");
+		ImGui::End();
 
 		shaders[0]->setInt("skybox", 0);
 
@@ -721,7 +736,7 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());		
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 tmp = glm::mat4(1.0f);
@@ -732,7 +747,7 @@ int main() {
 		shaders[1]->setMat4("projection", projectionOp);
 		shaders[1]->setMat4("view", viewOp);
 
-		
+
 		setAnimationShader(shaders, projectionOp, viewOp);
 		setStaticShader(shaders, projectionOp, viewOp);
 
@@ -747,21 +762,6 @@ int main() {
 		// note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
 		myShader.setMat4("projection", projectionOp);
 		/**********/
-
-
-		// -------------------------------------------------------------------------------------------------------------------------
-		// Personaje Animacion
-		// -------------------------------------------------------------------------------------------------------------------------
-		//Remember to activate the shader with the animation
-		
-
-		/*
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(-40.3f, 1.75f, 0.3f)); // translate it down so it's at the center of the scene
-		modelOp = glm::scale(modelOp, glm::vec3(0.05f));	// it's a bit too big for our scene, so scale it down
-		modelOp = glm::rotate(modelOp, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[2].setMat4("model", modelOp);
-		animacionPersonaje.Draw(shaders[2]);
-		*/
 
 		// -------------------------------------------------------------------------------------------------------------------------
 		// Escenario Primitivas
@@ -789,42 +789,16 @@ int main() {
 		//glDrawArrays(GL_TRIANGLES, 0, 36); //A lonely cube :(
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		/***   Segundo objeto  **/
-		/*
-		glBindVertexArray(VAO[1]);
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
-		myShader.setMat4("model", modelOp);
-		myShader.setVec3("aColor", 1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, t_unam);
-		glDrawArrays(GL_TRIANGLES, 0, 36); //A lonely cube :(
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		*/
 		glBindVertexArray(0);
 		// ------------------------------------------------------------------------------------------------------------------------
 		// Termina Escenario Primitivas
 		// -------------------------------------------------------------------------------------------------------------------------
 
-		// -------------------------------------------------------------------------------------------------------------------------
-		// Escenario
-		// -------------------------------------------------------------------------------------------------------------------------
-		/*shaders[1].use();
-		shaders[1].setMat4("projection", projectionOp);
-		shaders[1].setMat4("view", viewOp);*/
 
-		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(250.0f, 0.0f, -10.0f));
-		modelOp = glm::rotate(modelOp, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		casaDoll.Draw(shaders[1]);*/
-
-		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.75f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.2f));
-		shaders[1].setMat4("model", modelOp);
-		piso.Draw(shaders[1]);*/
-
-        for (const GameObjectData& gameObject : gameObjects)  
-        {  
+		for (const GameObjectData& gameObject : gameObjects)
+		{
 			cout << gameObject.name << endl;
-			
+
 			gameObject.shader->use();
 			if (gameObject.shader == shaders[estatico]) {
 				setStaticShader(shaders, projectionOp, viewOp);
@@ -832,9 +806,9 @@ int main() {
 			else if (gameObject.shader == shaders[animado]) {
 				setAnimationShader(shaders, projectionOp, viewOp);
 			}
-			
+
 			if (gameObject.model != nullptr) {
-				
+
 				// set the view and projection matrices
 				gameObject.shader->setMat4("projection", projectionOp);
 				gameObject.shader->setMat4("view", viewOp);
@@ -845,7 +819,7 @@ int main() {
 				modelOp = glm::rotate(modelOp, glm::radians(gameObject.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 				modelOp = glm::scale(modelOp, gameObject.scale);
 				gameObject.shader->setMat4("model", modelOp);
-				
+
 				if (gameObject.model != nullptr) {
 
 					gameObject.model->Draw(*gameObject.shader);
@@ -856,117 +830,22 @@ int main() {
 				}
 
 			}
-			else {
-				// nada de momento
+			else if (gameObject.model_a != nullptr) {
+				// set the view and projection matrices
+				gameObject.shader->setMat4("projection", projectionOp);
+				gameObject.shader->setMat4("view", viewOp);
+
+				modelOp = glm::translate(glm::mat4(1.0f), gameObject.position);
+				modelOp = glm::rotate(modelOp, glm::radians(gameObject.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+				modelOp = glm::rotate(modelOp, glm::radians(gameObject.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+				modelOp = glm::rotate(modelOp, glm::radians(gameObject.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+				modelOp = glm::scale(modelOp, gameObject.scale);
+				gameObject.shader->setMat4("model", modelOp);
+
+				gameObject.model_a->Draw(*gameObject.shader);
 			}
+		}
 
-			
-        }
-
-		//modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, -1.75f, 10.0f));
-		//// modelOp = glm::scale(modelOp, glm::vec3(0.2f));
-		//shaders[estatico].setMat4("model", modelOp);
-		//edificio.Draw(shaders[1]);
-
-		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -70.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(5.0f));
-		shaders[1].setMat4("model", modelOp);
-		shaders[1].setVec3("dirLight.specular", glm::vec3(0.0f, 0.0f, 0.0f));
-		casaVieja.Draw(shaders[1]);*/
-
-		/*
-		// -------------------------------------------------------------------------------------------------------------------------
-		// Carro
-		// -------------------------------------------------------------------------------------------------------------------------
-		//modelOp = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(movAuto_x, -1.0f, movAuto_z - 15.0f));
-		tmp = modelOp = glm::rotate(modelOp, glm::radians(orienta), glm::vec3(0.0f, 1.0f, 0.0f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.1f, 0.1f, 0.1f));
-		shaders[1].setVec3("dirLight.specular", glm::vec3(0.6f, 0.6f, 0.6f));
-		shaders[1].setMat4("model", modelOp);
-		carro.Draw(shaders[1]);
-
-		modelOp = glm::translate(tmp, glm::vec3(8.5f, 2.5f, 12.9f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.1f, 0.1f, 0.1f));
-		shaders[1].setMat4("model", modelOp);
-		llanta.Draw(shaders[1]);	//Izq delantera
-
-		modelOp = glm::translate(tmp, glm::vec3(-8.5f, 2.5f, 12.9f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.1f, 0.1f, 0.1f));
-		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		llanta.Draw(shaders[1]);	//Der delantera
-
-		modelOp = glm::translate(tmp, glm::vec3(-8.5f, 2.5f, -14.5f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.1f, 0.1f, 0.1f));
-		modelOp = glm::rotate(modelOp, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		llanta.Draw(shaders[1]);	//Der trasera
-
-		modelOp = glm::translate(tmp, glm::vec3(8.5f, 2.5f, -14.5f));
-		modelOp = glm::scale(modelOp, glm::vec3(0.1f, 0.1f, 0.1f));
-		shaders[1].setMat4("model", modelOp);
-		llanta.Draw(shaders[1]);	//Izq trase
-		*/
-		// -------------------------------------------------------------------------------------------------------------------------
-		// Personaje
-		// -------------------------------------------------------------------------------------------------------------------------
-		
-		// -------------------------------------------------------------------------------------------------------------------------
-		// Just in case
-		// -------------------------------------------------------------------------------------------------------------------------
-		/*modelOp = glm::translate(glm::mat4(1.0f), glm::vec3(posX, posY, posZ));
-		tmp = modelOp = glm::rotate(modelOp, glm::radians(giroMonito), glm::vec3(0.0f, 1.0f, 0.0));
-		shaders[1].setMat4("model", modelOp);
-		torso.Draw(shaders[1]);
-
-		//Pierna Der
-		modelOp = glm::translate(tmp, glm::vec3(-0.5f, 0.0f, -0.1f));
-		modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0));
-		modelOp = glm::rotate(modelOp, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		piernaDer.Draw(shaders[1]);
-
-		//Pie Der
-		modelOp = glm::translate(modelOp, glm::vec3(0, -0.9f, -0.2f));
-		shaders[1].setMat4("model", modelOp);
-		botaDer.Draw(shaders[1]);
-
-		//Pierna Izq
-		modelOp = glm::translate(tmp, glm::vec3(0.5f, 0.0f, -0.1f));
-		modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		piernaIzq.Draw(shaders[1]);
-
-		//Pie Iz
-		modelOp = glm::translate(modelOp, glm::vec3(0, -0.9f, -0.2f));
-		shaders[1].setMat4("model", modelOp);
-		botaDer.Draw(shaders[1]);	//Izq trase
-
-		//Brazo derecho
-		modelOp = glm::translate(tmp, glm::vec3(0.0f, -1.0f, 0.0f));
-		modelOp = glm::translate(modelOp, glm::vec3(-0.75f, 2.5f, 0));
-		modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		brazoDer.Draw(shaders[1]);
-
-		//Brazo izquierdo
-		modelOp = glm::translate(tmp, glm::vec3(0.0f, -1.0f, 0.0f));
-		modelOp = glm::translate(modelOp, glm::vec3(0.75f, 2.5f, 0));
-		modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		shaders[1].setMat4("model", modelOp);
-		brazoIzq.Draw(shaders[1]);
-
-		//Cabeza
-		modelOp = glm::translate(tmp, glm::vec3(0.0f, -1.0f, 0.0f));
-		modelOp = glm::rotate(modelOp, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0));
-		modelOp = glm::translate(modelOp, glm::vec3(0.0f, 2.5f, 0));
-		shaders[1].setMat4("model", modelOp);
-		cabeza.Draw(shaders[1]);*/
-
-		//-------------------------------------------------------------------------------------
-		// draw skybox as last
-		// -------------------
 		shaders[0]->use();
 		skybox.Draw(*shaders[0], viewOp, projectionOp, camera);
 
@@ -977,17 +856,13 @@ int main() {
 			SDL_Delay((int)(LOOP_TIME - deltaTime));
 		}
 
-		
+
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
-	}
-	// Limpieza de memoria
-	for (auto shader : shaders) {
-		delete shader;
 	}
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
@@ -1035,6 +910,16 @@ void my_input(GLFWwindow* window, int key, int scancode, int action, int mode)
 			camera.ProcessKeyboard(UP, (float)deltaTime);
 		if (glfwGetKey(window, GLFW_KEY_Q))
 			camera.ProcessKeyboard(DOWN, (float)deltaTime);
+	}
+	else {
+		if (glfwGetKey(window, GLFW_KEY_W))
+			gameObjects[1].position.z -= 0.01f;
+		if (glfwGetKey(window, GLFW_KEY_S))
+			gameObjects[1].position.z += 0.01f;
+		if (glfwGetKey(window, GLFW_KEY_A))
+			gameObjects[1].position.x -= 0.01f;
+		if (glfwGetKey(window, GLFW_KEY_D))
+			gameObjects[1].position.x += 0.01f;
 	}
 	
 
